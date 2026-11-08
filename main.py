@@ -6,9 +6,10 @@ Punto de entrada del gestor de tareas.
 from app.operaciones import GestorTareas
 from app.imprimir_msj import MostrarMensaje
 from app.menu import mostrar_menu, solicitar_texto, solicitar_prioridad
+from app.limpiar_pantalla import limpiar_pantalla
 
 
-def main() -> None:
+def main():
     """Inicializa y ejecuta la aplicación."""
 
     mensajes = MostrarMensaje()
@@ -17,10 +18,13 @@ def main() -> None:
     salir = False
 
     while not salir:
+        limpiar_pantalla()
+
         try:
             opcion = mostrar_menu(mensajes)
 
             if opcion == 1:
+                limpiar_pantalla()
                 mensajes.mostrar_titulo("AÑADIR TAREA")
 
                 nombre = solicitar_texto(mensajes, "Nombre de la tarea: ")
@@ -46,6 +50,7 @@ def main() -> None:
                 )
 
             elif opcion == 2:
+                limpiar_pantalla()
                 mensajes.mostrar_titulo("LISTADO DE TAREAS")
 
                 tareas = gestor.listar_tareas()
@@ -56,9 +61,12 @@ def main() -> None:
                     )
                 else:
                     for tarea in tareas:
-                        mensajes.imprimir_mensaje(str(tarea))
+                        mensajes.imprimir_mensaje(
+                            gestor.formatear_tarea(tarea)
+                        )
 
             elif opcion == 3:
+                limpiar_pantalla()
                 mensajes.mostrar_titulo("BUSCAR TAREA")
 
                 palabra = solicitar_texto(
@@ -73,7 +81,9 @@ def main() -> None:
                     )
                 else:
                     for tarea in resultados:
-                        mensajes.imprimir_mensaje(str(tarea))
+                        mensajes.imprimir_mensaje(
+                            gestor.formatear_tarea(tarea)
+                        )
 
             elif opcion == 4:
                 salir = True
@@ -83,11 +93,13 @@ def main() -> None:
 
         except (ValueError, TypeError, KeyError) as error:
             mensajes.mostrar_error(str(error))
+            input("\nPulsa INTRO para continuar...")
 
         except (KeyboardInterrupt, EOFError):
             mensajes.mostrar_advertencia("Cerrando aplicación...")
             salir = True
 
+    limpiar_pantalla()
     mensajes.mostrar_informacion(
         "Gracias por utilizar el gestor de tareas."
     )

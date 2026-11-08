@@ -5,23 +5,29 @@ Módulo encargado de mostrar el menú y solicitar datos.
 
 from typing import Tuple
 
+from colorama import Fore, Style
 from app.imprimir_msj import MostrarMensaje
 
 
 def mostrar_menu(mensajes: MostrarMensaje) -> int:
     """Muestra el menú y solicita una opción válida."""
 
+
+
     opciones: Tuple[str, ...] = (
-        "1. Añadir tarea",
-        "2. Listar tareas",
-        "3. Buscar tarea",
-        "4. Salir"
+        "Añadir tarea",
+        "Listar tareas",
+        "Buscar tarea",
+        "Salir"
     )
 
-    mensajes.mostrar_titulo("GESTOR DE TAREAS")
+    #mensajes.imprimir_mensaje(titulo)
+    mensajes.mostrar_titulo("MENÚ PRINCIPAL")
 
-    for opcion in opciones:
-        mensajes.imprimir_mensaje(opcion)
+    for numero, opcion in enumerate(opciones, start=1):
+        mensajes.imprimir_mensaje(
+            f"{Fore.LIGHTGREEN_EX}{numero}{Style.RESET_ALL}. {opcion}"
+        )
 
     seleccion = 0
 
@@ -30,7 +36,9 @@ def mostrar_menu(mensajes: MostrarMensaje) -> int:
             seleccion = int(input("\nSelecciona una opción: "))
 
             if not 1 <= seleccion <= 4:
-                mensajes.mostrar_error("Selecciona una opción entre 1 y 4.")
+                mensajes.mostrar_error(
+                    "Selecciona una opción entre 1 y 4."
+                )
 
         except ValueError:
             mensajes.mostrar_error("Debes introducir un número.")
@@ -72,9 +80,9 @@ def solicitar_prioridad(mensajes: MostrarMensaje) -> str:
 
     while seleccion not in prioridades:
         mensajes.imprimir_mensaje(
-            "1. Baja\n"
-            "2. Media\n"
-            "3. Alta"
+            f"{Fore.LIGHTGREEN_EX}1{Style.RESET_ALL}. Baja\n"
+            f"{Fore.LIGHTGREEN_EX}2{Style.RESET_ALL}. Media\n"
+            f"{Fore.LIGHTGREEN_EX}3{Style.RESET_ALL}. Alta"
         )
 
         seleccion = input("Selecciona la prioridad: ").strip()
